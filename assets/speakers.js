@@ -68,7 +68,7 @@ export default [
       'Rethinking Enterprise Architectures',
       'with Node.js'
     ],
-    image: 'kamilmysliwiec.jpg'
+    image: 'kamil-mysliwiec.jpg'
   },
   {
     id: 'evanschultz',
