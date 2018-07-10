@@ -2,81 +2,6 @@ import THREE from '../third-party/three.js';
 import textVertexShader from '../shaders/text-vs.js';
 import textFragmentShader from '../shaders/text-fs.js';
 
-if( !('FontFace' in window ) ) {
-
-    window.FontFace = function( name, src ) {
-
-        var type = "woff";
-        if( src.indexOf( 'woff2' ) !== -1 ) type = 'woff2';
-
-        var src = "\
-        @font-face {\
-font-family: '" + name + "';\
-src: local('" + name + "'), " + src + " format(" + type + ");\
-}\
-"
-        console.log( src )
-
-        var newStyle = document.createElement('style');
-        newStyle.appendChild( document.createTextNode( src ));
-
-        document.head.appendChild( newStyle );
-
-        var fontStyle = 'normal';
-        var fontSize = 140;
-        var fontName = name;
-        var fontString = fontStyle + ' ' + fontSize + 'px "' + fontName + '"';
-        var testStr = 'lorem ipsum dolor sit amet';
-
-        var canvas = document.createElement( 'canvas' );
-        var ctx = canvas.getContext( '2d' );
-
-        this.loaded = new Promise( function( resolve, reject ) {
-
-            var wait = 0;
-
-            ctx.font = fontString
-            var res = ctx.measureText( testStr );
-            var defaultWidth = res.width;
-
-            function waitForFont() {
-
-                ctx.font = fontString;
-                var res = ctx.measureText( testStr );
-                if( res.width != defaultWidth ) {
-                    resolve();
-                } else if( wait > 30 ) {
-                    reject();
-                } else {
-                    wait++;
-                    setTimeout( waitForFont.bind( this ), 100 );
-                }
-
-            }
-
-            waitForFont();
-
-        } );
-    }
-
-    window.FontFace.prototype.load = function() {
-        return this.loaded;
-    }
-
-}
-
-// https://github.com/filamentgroup/woff2-feature-test/blob/master/woff2.js
-//var f = new window.FontFace('t', 'url( "data:application/font-woff2;base64,d09GMgABAAAAAAIkAAoAAAAABVwAAAHcAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAABlYAgloKLEoBNgIkAxgLDgAEIAWDcgc1G7IEyB6SJAFID5YA3nAHC6h4+H7s27nP1kTyOoQkGuJWtNGIJKYznRI3VEL7IaHq985ZUuKryZKcAtJsi5eULwUybm9KzajBBhywZ5ZwoJNuwDX5C/xBjvz5DbsoNsvG1NGQiqp0NMLZ7JlnW+5MaM3HwcHheUQeiVokekHkn/FRdefvJaTp2PczN+I1Sc3k9VuX51Tb0Tqqf1deVXGdJsDOhz0/EffMOPOzHNH06pYkDDjs+P8fb/z/8n9Iq8ITzWywkP6PBMMN9L/O7vY2FNoTAkp5PpD6g1nV9WmyQnM5uPpAMHR2fe06jbfvzPriekVTQxC6lpKr43oDtRZfCATl5OVAUKykqwm9o8R/kg37cxa6eZikS7cjK4aIwoyh6jOFplhFrz2b833G3Jii9AjDUiAZ9AxZtxdEYV6imvRF0+0Nej3wu6nPZrTLh81AVcV3kmMVdQj6Qbe9qetzbuDZ7vXOlRrqooFSxCv6SfrDICA6rnHZXQPVcUHJYGcoqa3jVH7ATrjWBNYYkEqF3RFpVIl0q2JvMOJd7/TyjXHw2NyAuJpNaEbz8RTEVtCbSH7JrwQQOqwGl7sTUOtdBZIY2DKqKlvOmPvUxJaURAZZcviTT0SKHCXqzwc=" ) format( "woff2" )', {});
-//f.load().then( function(){ console.log( 'woff2 support' ); } ).catch(function() { console.log( 'woff2 not supported')});
-
-if( document.fonts === undefined ) {
-    document.fonts = {
-        add: function() {}
-    }
-}
-//document.fonts = {}
-//document.fonts.add = function(){}
-
 const FontTextureCache = function() {
 
     this.fonts = {}
@@ -135,13 +60,14 @@ const FontAtlas = function( settings, onReady ) {
         THREE.ClampToEdgeWrapping, THREE.ClampToEdgeWrapping,
         THREE.LinearFilter, THREE.LinearMipMapLinearFilter,
         THREE.RGBAFormat, THREE.UnsignedByteType,
-        settings.renderer.getMaxAnisotropy()
+        settings.renderer.capabilities.getMaxAnisotropy()
         )
     this.texture.premultiplyAlpha = true
 
     this.fontString = this.fontStyle + ' ' + this.size + 'px "' + this.fontName + '"';
 
     this.fontface = new window.FontFace( this.fontName, this.settings.woff2Src );
+    this.fontface.unicodeRange = 'U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F'
     document.fonts.add(this.fontface);
 
     var div = document.createElement( 'div' );
@@ -308,7 +234,8 @@ const Text = function( atlas ) {
         side: THREE.DoubleSide,
         wireframe: false,
         transparent: true,
-        depthWrite: false
+        depthWrite: false,
+        depthTest: false
     } );
 
     this.mesh = new THREE.Mesh( this.geometry, this.material );
