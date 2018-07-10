@@ -1,6 +1,8 @@
 export default `
 precision highp float;
 uniform sampler2D map;
+uniform float opacity;
+
 varying vec2 vUv;
 
 #define M_PI 3.1415926535897932384626433832795
@@ -31,5 +33,7 @@ void main() {
   vec3 g = mix(color1, color2, t);
 
   gl_FragColor = vec4(blend(c.rgb,g), .9 + .1* l);
+  gl_FragColor.a *= opacity;
+
 }
 `;

@@ -52,12 +52,14 @@ class Speaker extends Layer {
       new THREE.PlaneBufferGeometry(1,1),
       new THREE.RawShaderMaterial({
         uniforms: {
-          map: { value: null }
+          map: { value: null },
+          opacity: { value: 0 },
         },
         vertexShader: speakerVertexShader,
         fragmentShader: speakerFragmentShader,
         depthTest: false,
         depthWrite: true,
+        transparent: true,
       })
     );
     this.plane.position.x = -2;
@@ -68,17 +70,23 @@ class Speaker extends Layer {
     this.nameplate = new THREE.Mesh(
       new THREE.PlaneBufferGeometry(1,1),
       new THREE.MeshBasicMaterial({
-        color: 0xff00ff
+        color: 0xff00ff,
+        transparent: true,
+        opacity: 0
       })
     );
+    this.nameplate.position.z = -.5;
     this.scene.add(this.nameplate);
 
     this.talkplate = new THREE.Mesh(
       new THREE.PlaneBufferGeometry(1,1),
       new THREE.MeshBasicMaterial({
-        color: 0x18d4d5
+        color: 0x18d4d5,
+        transparent: true,
+        opacity: 0
       })
     );
+    this.talkplate.position.z = -.5;
     this.scene.add(this.talkplate);
 
     this.camera = new THREE.PerspectiveCamera( 70, 1, .1, 10000 );
@@ -86,6 +94,7 @@ class Speaker extends Layer {
     this.camera.position.set(0,0,5);
     this.camera.lookAt( this.camera.target );
     this.scene.add( this.camera );
+
   }
 
   preload() {
@@ -122,10 +131,21 @@ class Speaker extends Layer {
     this.talkplate.position.y = -.8;
     this.talkplate.scale.x = .005*w;
     this.talkplate.scale.y = .4 * speaker.talk.length;
+    this.plane.material.uniforms.opacity.value = 1;
+    this.nameplate.material.opacity = 1;
+    this.talkplate.material.opacity = 1;
+  }
+
+  unselectSpeaker() {
+    this.speakerName.set('');
+    this.nameplate.material.opacity = 0;
+    this.talkplate.material.opacity = 0;
+    this.talkTitleLines.forEach( l => l.set('') );
+    this.plane.material.uniforms.opacity.value = 0;
   }
 
   render() {
-    const t = .001 * performance.now();
+    const t = .0005 * performance.now();
     const f = .025 * Math.sin(t);
     this.plane.rotation.set(f,f,f);
     const x = .25 * Math.cos(.9*t);
