@@ -55,6 +55,12 @@ class Visuals {
 
     this.prevTime = t;
   }
+
+  selectSpeaker(id) {
+    this.intro.plane.visible = false;
+    this.speaker.selectSpeaker(id);
+  }
+
 }
 
 const visuals = new Visuals();
