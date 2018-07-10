@@ -101,7 +101,7 @@ class Speaker extends Layer {
     const loader = new THREE.TextureLoader();
 
     speakers.forEach( s => {
-      loader.load(`/assets/speakers/${s.image}`, (texture) => {
+      loader.load(`assets/speakers/${s.image}`, (texture) => {
         this.speakers.set(s.id, {...s, texture});
         this.names[s.id] = s.id;
       });
