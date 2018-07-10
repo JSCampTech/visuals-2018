@@ -61,6 +61,11 @@ class Visuals {
     this.speaker.selectSpeaker(id);
   }
 
+  showLogo() {
+    this.speaker.unselectSpeaker();
+    this.intro.plane.visible = true;
+  }
+
 }
 
 const visuals = new Visuals();
