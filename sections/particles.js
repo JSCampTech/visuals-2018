@@ -54,7 +54,7 @@ class Particles extends Layer {
     const vertices = this.geometry.attributes.position;
     for (let p=0; p<vertices.count; p++) {
       let y = vertices.array[p*3+1];
-      y += .001 * delta;
+      y += .0005 * delta;
       if (y<-1) y += 2;
       if (y>1) y -= 2;
       vertices.array[p*3+1] = y;
@@ -62,7 +62,7 @@ class Particles extends Layer {
     this.attribute.needsUpdate = true;
 
     let a = this.particles.rotation.x;
-    let b = this.particles.rotation.y + .001 * delta;
+    let b = this.particles.rotation.y + .0005 * delta;
     let c = this.particles.rotation.z;
 
     this.particles.rotation.set(a,b,c);
