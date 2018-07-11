@@ -18,3 +18,7 @@ How to run:
     - Speakers ids, names, talks, etc. are defined on /assets/speakers.js
     - To help with this, ```visuals.speaker.names``` is an enum of all names, can autocomplete.
     - example: ```visuals.speaker.selectSpeaker(visuals.speaker.names.elisabethengel)```
+    
+- Using Control Panel
+  - Open another window with ```localhost:8080/control.html```
+  - Select options from the control panel
