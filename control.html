@@ -15,6 +15,10 @@
   font-family: 'Montserrat', sans-serif;
 }
 
+body {
+  padding: 40px;
+}
+
 #speakers-list {
   display: flex;
   flex-flow: row wrap;
@@ -22,13 +26,13 @@
 }
 
 #speakers-list li {
+  width: 128px;
   margin-bottom: 4px;
   margin-right: 4px;
   cursor: pointer;
 }
 
 #speakers-list li div {
-  width: 128px;
   height: 128px;
   background-size: contain;
   flex: 1;
@@ -39,22 +43,57 @@
   color: white;
   text-align: center;
   padding: 4px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 #speakers-list li:hover p {
+  background-color: #ff00ff;
+}
+
+.unit {
+  margin-bottom: 20px;
+}
+
+h2 {
+  margin-bottom: 10px;
+}
+
+.button {
+  display: table-cell;
+  background-color: #18d4d5;
+  color: white;
+  text-align: center;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.button:hover {
   background-color: #ff00ff;
 }
   </style>
   </head>
   <body>
 
-<h2>Main</h2>
-<ul>
-  <li id="showIntro">Intro</li>
-</ul>
+<div class="unit">
+  <h2>Main</h2>
+  <ul>
+    <li id="showIntro" class="button">Show Intro</li>
+  </ul>
+</div>
 
-<h2>Speakers</h2>
-<ul id="speakers-list"></ul>
+<div class="unit">
+  <h2>Speakers</h2>
+  <ul id="speakers-list"></ul>
+</div>
+
+<div class="unit">
+  <h2>Message</h2>
+  <textarea>
+  </textarea>
+  <input type="button" value="To Screen">
+</div>
 
 <script type="module">
 
