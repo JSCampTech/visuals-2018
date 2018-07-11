@@ -71,4 +71,17 @@ class Visuals {
 const visuals = new Visuals();
 window.visuals = visuals;
 
+const bc = new BroadcastChannel('jscamp');
+bc.onmessage = function (ev) {
+  console.log(ev);
+  switch (ev.data.action){
+    case 'selectSpeaker':
+    visuals.selectSpeaker(ev.data.id);
+    break;
+    case 'showIntro':
+    visuals.showLogo();
+    break;
+  }
+}
+
 export default visuals

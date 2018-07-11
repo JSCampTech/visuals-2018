@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>JS Camp 2018</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+    <link rel="stylesheet" type="text/css" href="css/styles.css" media="screen" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&amp;subset=cyrillic,cyrillic-ext,latin-ext" rel="stylesheet">
+    <style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+
+#speakers-list {
+  display: flex;
+  flex-flow: row wrap;
+  list-style-type: none;
+}
+
+#speakers-list li {
+  margin-bottom: 4px;
+  margin-right: 4px;
+  cursor: pointer;
+}
+
+#speakers-list li div {
+  width: 128px;
+  height: 128px;
+  background-size: contain;
+  flex: 1;
+}
+
+#speakers-list li p {
+  background-color: #18d4d5;
+  color: white;
+  text-align: center;
+  padding: 4px;
+}
+
+#speakers-list li:hover p {
+  background-color: #ff00ff;
+}
+  </style>
+  </head>
+  <body>
+
+<h2>Main</h2>
+<ul>
+  <li id="showIntro">Intro</li>
+</ul>
+
+<h2>Speakers</h2>
+<ul id="speakers-list"></ul>
+
+<script type="module">
+
+import speakers from '../assets/speakers.js';
+
+const bc = new BroadcastChannel('jscamp');
+
+const speakersList = document.getElementById('speakers-list');
+for (let s of speakers) {
+  const li = document.createElement('li');
+  const img = document.createElement('div');
+  const p = document.createElement('p');
+  img.style.backgroundImage = `url(assets/speakers/${s.image})`;
+  p.textContent = s.name;
+  li.appendChild(img);
+  li.appendChild(p);
+  li.addEventListener('click', e => {
+    bc.postMessage({action: 'selectSpeaker', id: s.id});
+    console.log('sent');
+  });
+  speakersList.appendChild(li);
+}
+
+document.getElementById('showIntro').addEventListener('click', e => {
+  bc.postMessage({action: 'showIntro'});
+})
+
+</script>
+
+  </body>
+</html>
