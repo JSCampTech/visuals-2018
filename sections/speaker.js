@@ -16,13 +16,13 @@ class Speaker extends Layer {
     this.montserratAtlas = new FontAtlas( {
       renderer: renderer,
       fontName: 'Montserrat',
-      fontStyle: 'bold',
+      fontStyle: '',
       woff2Src: `url(https://fonts.gstatic.com/s/montserrat/v12/JTUSjIg1_i6t8kCHKm459WlhyyTh89Y.woff2) format('woff2')`
     }, () => {
       this.titleTalk = new THREE.Group();
       this.talkTitleLines = [];
       for (let j=0; j<3; j++) {
-        const line = new Text(this.montserratBoldAtlas);
+        const line = new Text(this.montserratAtlas);
         line.mesh.position.x = -1.5;
         line.mesh.position.y = -.8 - j * .4;
         line.mesh.scale.setScalar(4);
@@ -35,10 +35,10 @@ class Speaker extends Layer {
     this.montserratBoldAtlas = new FontAtlas( {
       renderer: renderer,
       fontName: 'Montserrat',
-      fontStyle: '',
+      fontStyle: 'bold',
       woff2Src: `url(https://fonts.gstatic.com/s/montserrat/v12/JTUSjIg1_i6t8kCHKm459WlhyyTh89Y.woff2) format('woff2')`
     }, () => {
-      this.speakerName = new Text(this.montserratAtlas);
+      this.speakerName = new Text(this.montserratBoldAtlas);
       this.speakerName.mesh.scale.setScalar(4);
       this.speakerName.set('');
       this.speakerName.mesh.position.set(.25,.125,0);
