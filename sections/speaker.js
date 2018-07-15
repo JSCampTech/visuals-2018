@@ -16,18 +16,6 @@ class Speaker extends Layer {
     this.montserratAtlas = new FontAtlas( {
       renderer: renderer,
       fontName: 'Montserrat',
-      fontStyle: '',
-      woff2Src: `url(https://fonts.gstatic.com/s/montserrat/v12/JTUSjIg1_i6t8kCHKm459WlhyyTh89Y.woff2) format('woff2')`
-    }, () => {
-      this.speakerName = new Text(this.montserratAtlas);
-      this.speakerName.mesh.scale.setScalar(4);
-      this.speakerName.mesh.position.x = -1;
-      this.speakerName.set('');
-      this.scene.add( this.speakerName.mesh );
-    } );
-    this.montserratBoldAtlas = new FontAtlas( {
-      renderer: renderer,
-      fontName: 'Montserrat',
       fontStyle: 'bold',
       woff2Src: `url(https://fonts.gstatic.com/s/montserrat/v12/JTUSjIg1_i6t8kCHKm459WlhyyTh89Y.woff2) format('woff2')`
     }, () => {
@@ -35,18 +23,33 @@ class Speaker extends Layer {
       this.talkTitleLines = [];
       for (let j=0; j<3; j++) {
         const line = new Text(this.montserratBoldAtlas);
+        line.mesh.position.x = -1.5;
         line.mesh.position.y = -.8 - j * .4;
-        line.mesh.position.x = -1.2;
         line.mesh.scale.setScalar(4);
         line.set('');
         this.titleTalk.add( line.mesh );
         this.talkTitleLines.push(line);
       }
-      this.scene.add(this.titleTalk);
-    } );
+      this.textGroup.add(this.titleTalk);
+    });
+    this.montserratBoldAtlas = new FontAtlas( {
+      renderer: renderer,
+      fontName: 'Montserrat',
+      fontStyle: '',
+      woff2Src: `url(https://fonts.gstatic.com/s/montserrat/v12/JTUSjIg1_i6t8kCHKm459WlhyyTh89Y.woff2) format('woff2')`
+    }, () => {
+      this.speakerName = new Text(this.montserratAtlas);
+      this.speakerName.mesh.scale.setScalar(4);
+      this.speakerName.set('');
+      this.speakerName.mesh.position.set(.25,.125,0);
+      this.textGroup.add( this.speakerName.mesh );
+    });
 
     this.speakers = new Map();
     this.preload();
+
+    this.textGroup = new THREE.Group();
+    this.scene.add(this.textGroup);
 
     this.plane = new THREE.Mesh(
       new THREE.PlaneBufferGeometry(1,1),
@@ -62,7 +65,7 @@ class Speaker extends Layer {
         transparent: true,
       })
     );
-    this.plane.position.x = -2;
+    this.plane.position.x = -2.5;
     this.plane.position.z = -1;
     this.plane.rotation.set(.05,.05,.05);
     this.scene.add(this.plane);
@@ -75,8 +78,10 @@ class Speaker extends Layer {
         opacity: 0
       })
     );
+    const m = new THREE.Matrix4().makeTranslation(.5,0,0);
+    this.nameplate.geometry.applyMatrix(m);
     this.nameplate.position.z = -.5;
-    this.scene.add(this.nameplate);
+    this.textGroup.add(this.nameplate);
 
     this.talkplate = new THREE.Mesh(
       new THREE.PlaneBufferGeometry(1,1),
@@ -86,11 +91,17 @@ class Speaker extends Layer {
         opacity: 0
       })
     );
+    this.talkplate.geometry.applyMatrix(m);
+    this.talkplate.position.x = -2;
+    this.talkplate.position.y = -.8;
     this.talkplate.position.z = -.5;
-    this.scene.add(this.talkplate);
+    this.textGroup.add(this.talkplate);
+
+    this.textGroup.position.x = -1;
+    this.textGroup.position.y = -1.5;
 
     this.camera = new THREE.PerspectiveCamera( 70, 1, .1, 10000 );
-    this.camera.target = new THREE.Vector3( 0, 0, 0 );
+    this.camera.target = new THREE.Vector3( 0, -1, 0 );
     this.camera.position.set(0,0,5);
     this.camera.lookAt( this.camera.target );
     this.scene.add( this.camera );
@@ -117,20 +128,18 @@ class Speaker extends Layer {
     this.plane.material.needsUpdate = true;
     texture.needsUpdate = true;
     this.speakerName.set(speaker.name);
-    this.nameplate.position.x = .0025*.9*this.speakerName.width - 1.15;
-    this.nameplate.position.y = .33;
-    this.nameplate.scale.x = .005*this.speakerName.width;
-    this.nameplate.scale.y = .5;
+    this.nameplate.position.y = .45;
+    this.nameplate.scale.x = .25 + .005 * this.speakerName.width;
+    this.nameplate.scale.y = .75;
     this.talkTitleLines.forEach( l => l.set(''));
     let w = 0;
     speaker.talk.forEach( (l, i) => {
       this.talkTitleLines[i].set(l);
       w = Math.max(w, this.talkTitleLines[i].width);
     } );
-    this.talkplate.position.x = .0025*.9*w - 1.15;
-    this.talkplate.position.y = -.8;
-    this.talkplate.scale.x = .005*w;
-    this.talkplate.scale.y = .4 * speaker.talk.length;
+    this.talkplate.scale.x = .25 + .005 * w;
+    this.talkplate.scale.y = .5 + .4 * speaker.talk.length;
+    this.talkplate.position.y = -.4 - .4 * .5 * speaker.talk.length;
     this.plane.material.uniforms.opacity.value = 1;
     this.nameplate.material.opacity = 1;
     this.talkplate.material.opacity = 1;
@@ -150,7 +159,7 @@ class Speaker extends Layer {
     this.plane.rotation.set(f,f,f);
     const x = .25 * Math.cos(.9*t);
     const y = .25 * Math.sin(1.1*t);
-    this.camera.position.set(x,y,5);
+    this.camera.position.set(x,-1+y,5);
     this.camera.lookAt(this.camera.target);
     this.renderer.render(this.scene, this.camera);
   }
