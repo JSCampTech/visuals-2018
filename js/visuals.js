@@ -2,6 +2,7 @@ import THREE from '../third-party/three.js';
 import Background from '../sections/background.js';
 import Particles from '../sections/particles.js';
 import Intro from '../sections/intro.js';
+import Logo from '../sections/logo.js';
 import Speaker from '../sections/speaker.js';
 import Announcement from '../sections/announcement.js';
 
@@ -14,6 +15,7 @@ class Visuals {
     document.body.appendChild(this.renderer.domElement);
     this.renderer.setPixelRatio(window.devicePixelRatio);
 
+    this.logo = new Logo(this.renderer);
     this.intro = new Intro(this.renderer);
     this.speaker = new Speaker(this.renderer);
     this.background = new Background(this.renderer);
@@ -33,6 +35,7 @@ class Visuals {
     const h = window.innerHeight;
     this.renderer.setSize(w,h);
 
+    this.logo.setSize(w,h);
     this.intro.setSize(w,h);
     this.particles.setSize(w,h);
     this.speaker.setSize(w,h);
@@ -49,6 +52,7 @@ class Visuals {
     this.renderer.autoClear = false;
     this.renderer.clear(true,true, true);
     this.background.render();
+    this.logo.render();
     this.intro.render();
     this.speaker.render();
     this.announcement.render();
