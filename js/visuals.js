@@ -3,6 +3,7 @@ import Background from '../sections/background.js';
 import Particles from '../sections/particles.js';
 import Intro from '../sections/intro.js';
 import Speaker from '../sections/speaker.js';
+import Announcement from '../sections/announcement.js';
 
 class Visuals {
 
@@ -17,8 +18,7 @@ class Visuals {
     this.speaker = new Speaker(this.renderer);
     this.background = new Background(this.renderer);
     this.particles = new Particles(this.renderer);
-
-    //this.speaker.selectSpeaker('michaela-lehr');
+    this.announcement = new Announcement(this.renderer);
 
     this.resize();
     window.addEventListener('resize', () => this.resize() );
@@ -37,6 +37,7 @@ class Visuals {
     this.particles.setSize(w,h);
     this.speaker.setSize(w,h);
     this.background.setSize(w,h);
+    this.announcement.setSize(w,h);
   }
 
   render() {
@@ -50,10 +51,16 @@ class Visuals {
     this.background.render();
     this.intro.render();
     this.speaker.render();
-    this.particles.render(delta);
+    this.announcement.render();
+    //this.particles.render(delta);
     this.renderer.autoClear = true;
 
     this.prevTime = t;
+  }
+
+  setAnnouncement(text) {
+    this.intro.plane.visible = false;
+    this.announcement.set(text);
   }
 
   selectSpeaker(id) {
@@ -80,6 +87,9 @@ bc.onmessage = function (ev) {
     break;
     case 'showIntro':
     visuals.showLogo();
+    break;
+    case 'setAnnouncement':
+    visuals.setAnnouncement(ev.data.text);
     break;
   }
 }
