@@ -13,6 +13,7 @@ class Announcement extends Layer {
 
     this.textGroup = new THREE.Group();
     this.scene.add(this.textGroup);
+    this.lines = [];
 
     this.montserratAtlas = new FontAtlas( {
       renderer: renderer,
@@ -33,8 +34,7 @@ class Announcement extends Layer {
       woff2Src: `url(https://fonts.gstatic.com/s/montserrat/v12/JTUSjIg1_i6t8kCHKm459WlhyyTh89Y.woff2) format('woff2')`
     }, () => {
       this.linesGroup = new THREE.Group();
-      this.lines = [];
-      for (let j=0; j<3; j++) {
+      for (let j=0; j<30; j++) {
         const line = new Text(this.montserratBoldAtlas);
         line.mesh.scale.setScalar(4);
         line.set('');
@@ -70,7 +70,7 @@ class Announcement extends Layer {
     lines.forEach( (l, i) => {
       this.lines[i].set(l);
       this.lines[i].mesh.position.x = -.5 * .004 * this.lines[i].width;
-      this.lines[i].mesh.position.y = (- .5 * h + i ) * .4
+      this.lines[i].mesh.position.y = - .33 + ( - i ) * .4 + .5 * h * .4;
       w = Math.max(w, this.lines[i].width);
     });
   }
