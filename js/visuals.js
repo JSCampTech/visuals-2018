@@ -1,6 +1,6 @@
 import THREE from '../third-party/three.js';
 import Background from '../sections/background.js';
-import Particles from '../sections/particles.js';
+//import Particles from '../sections/particles.js';
 import Intro from '../sections/intro.js';
 import Logo from '../sections/logo.js';
 import Speaker from '../sections/speaker.js';
@@ -19,7 +19,7 @@ class Visuals {
     this.intro = new Intro(this.renderer);
     this.speaker = new Speaker(this.renderer);
     this.background = new Background(this.renderer);
-    this.particles = new Particles(this.renderer);
+    //this.particles = new Particles(this.renderer);
     this.announcement = new Announcement(this.renderer);
 
     this.resize();
@@ -27,6 +27,7 @@ class Visuals {
 
     this.prevTime = performance.now();
 
+    this.showIntro();
     this.render();
   }
 
@@ -37,7 +38,7 @@ class Visuals {
 
     this.logo.setSize(w,h);
     this.intro.setSize(w,h);
-    this.particles.setSize(w,h);
+    //this.particles.setSize(w,h);
     this.speaker.setSize(w,h);
     this.background.setSize(w,h);
     this.announcement.setSize(w,h);
@@ -63,18 +64,26 @@ class Visuals {
   }
 
   setAnnouncement(text) {
-    this.intro.plane.visible = false;
+    this.logo.opacity = 1;
+    this.intro.opacity = 0;
+    this.announcement.opacity = 1;
+    this.speaker.opacity = 0;
     this.announcement.set(text);
   }
 
   selectSpeaker(id) {
-    this.intro.plane.visible = false;
+    this.logo.opacity = 1;
+    this.intro.opacity = 0;
+    this.announcement.opacity = 0;
+    this.speaker.opacity = 1;
     this.speaker.selectSpeaker(id);
   }
 
-  showLogo() {
-    this.speaker.unselectSpeaker();
-    this.intro.plane.visible = true;
+  showIntro() {
+    this.logo.opacity = 0;
+    this.announcement.opacity = 0;
+    this.intro.opacity = 1;
+    this.speaker.opacity = 0;
   }
 
 }
@@ -90,7 +99,7 @@ bc.onmessage = function (ev) {
     visuals.selectSpeaker(ev.data.id);
     break;
     case 'showIntro':
-    visuals.showLogo();
+    visuals.showIntro();
     break;
     case 'setAnnouncement':
     visuals.setAnnouncement(ev.data.text);

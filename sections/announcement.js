@@ -76,6 +76,9 @@ class Announcement extends Layer {
   }
 
   render() {
+    this.lines.forEach( (l, i) => {
+      l.mesh.material.uniforms.opacity.value = this.opacity;
+    });
     const t = .0005 * performance.now();
     const x = .25 * Math.cos(.9*t);
     const y = .25 * Math.sin(1.1*t);

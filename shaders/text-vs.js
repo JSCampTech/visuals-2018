@@ -1,5 +1,5 @@
 export default `
-#define MAX 48
+#define MAX 64
 precision highp float;
 attribute vec3 position;
 attribute float id;

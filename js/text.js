@@ -227,6 +227,7 @@ const Text = function( atlas ) {
             widths: { type: 'fv1', value: [] },
             lefts: { type: 'fv1', value: [] },
             map: { type: 't', value: this.atlas.texture },
+            opacity: { value: 0 },
             dimensions: { type: 'v3', value: new THREE.Vector3( this.atlas.texture.image.width, this.atlas.texture.image.height, this.atlas.size ) }
         },
         vertexShader: textVertexShader,

@@ -13,6 +13,8 @@ class Intro extends Layer {
       new THREE.MeshBasicMaterial({
         map: loader.load('assets/logo-mask-inverted.png'),
         transparent: true,
+        opacity: this.opacity,
+        depthWrite: false
       })
     );
     this.plane.scale.setScalar(5);
@@ -26,6 +28,7 @@ class Intro extends Layer {
   }
 
   render() {
+    this.plane.material.opacity = this.opacity;
     this.renderer.render(this.scene, this.camera);
   }
 

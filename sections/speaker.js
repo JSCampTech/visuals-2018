@@ -75,7 +75,7 @@ class Speaker extends Layer {
       new THREE.MeshBasicMaterial({
         color: 0xff00ff,
         transparent: true,
-        opacity: 0
+        opacity: 0,
       })
     );
     const m = new THREE.Matrix4().makeTranslation(.5,0,0);
@@ -154,6 +154,17 @@ class Speaker extends Layer {
   }
 
   render() {
+    if (this.speakerName) {
+      this.speakerName.material.uniforms.opacity.value = this.opacity;
+    }
+    if (this.talkTitleLines) {
+      this.talkTitleLines.forEach( (l) => {
+        l.material.uniforms.opacity.value = this.opacity;
+      });
+    }
+    this.nameplate.material.opacity = this.opacity;
+    this.talkplate.material.opacity = this.opacity;
+    this.plane.material.uniforms.opacity.value = this.opacity;
     const t = .0005 * performance.now();
     const f = .025 * Math.sin(t);
     this.plane.rotation.set(f,f,f);
