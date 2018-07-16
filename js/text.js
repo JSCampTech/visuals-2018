@@ -42,7 +42,7 @@ const FontAtlas = function( settings, onReady ) {
     this.w = this.canvas.width;
     this.h = this.canvas.height;
 
-    this.string = ' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890,.-;:_!"·$%&/()=?¿<>'
+    this.string = ` abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01234567890,.-;:_!"·*$%&/()=?¿<>'’@#¢∞¬÷“”≠`
     this.texture = null;
     this.fontStyle = this.settings.fontStyle || '';
     this.leftPosition = 0;
@@ -195,7 +195,7 @@ const Text = function( atlas ) {
     this.atlas = atlas;
 
     this.geometry = new THREE.BufferGeometry();
-    this.maxLength = 48;
+    this.maxLength = 64;
     this.positions = [];
     this.ids = [];
     this.indices = [];
