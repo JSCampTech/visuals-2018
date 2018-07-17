@@ -11,6 +11,7 @@ class Layer {
     this.startTime = performance.now();
     this.renderer = renderer;
     this.scene = new THREE.Scene();
+    this.ready = false;
   }
 
   set opacity(o) {
