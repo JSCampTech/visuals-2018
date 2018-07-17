@@ -12,6 +12,7 @@ class Speaker extends Layer {
     console.log('Speaker ctor');
 
     this.names = {};
+    this.group = new THREE.Group();
 
     this.montserratAtlas = new FontAtlas( {
       renderer: renderer,
@@ -31,6 +32,7 @@ class Speaker extends Layer {
         this.talkTitleLines.push(line);
       }
       this.textGroup.add(this.titleTalk);
+      this.checkReady();
     });
     this.montserratBoldAtlas = new FontAtlas( {
       renderer: renderer,
@@ -43,13 +45,14 @@ class Speaker extends Layer {
       this.speakerName.set('');
       this.speakerName.mesh.position.set(.25,.125,0);
       this.textGroup.add( this.speakerName.mesh );
+      this.checkReady();
     });
 
     this.speakers = new Map();
     this.preload();
 
     this.textGroup = new THREE.Group();
-    this.scene.add(this.textGroup);
+    this.group.add(this.textGroup);
 
     this.plane = new THREE.Mesh(
       new THREE.PlaneBufferGeometry(1,1),
@@ -68,7 +71,7 @@ class Speaker extends Layer {
     this.plane.position.x = -2.5;
     this.plane.position.z = -1;
     this.plane.rotation.set(.05,.05,.05);
-    this.scene.add(this.plane);
+    this.group.add(this.plane);
 
     this.nameplate = new THREE.Mesh(
       new THREE.PlaneBufferGeometry(1,1),
@@ -101,11 +104,22 @@ class Speaker extends Layer {
     this.textGroup.position.y = -1.5;
 
     this.camera = new THREE.PerspectiveCamera( 70, 1, .1, 10000 );
-    this.camera.target = new THREE.Vector3( 0, -1, 0 );
+    this.camera.target = new THREE.Vector3( 0, 0, 0 );
     this.camera.position.set(0,0,5);
     this.camera.lookAt( this.camera.target );
     this.scene.add( this.camera );
 
+    this.scene.add(this.group);
+
+    this.selectedSpeaker = null;
+
+  }
+
+  checkReady() {
+    this.ready = (
+      this.titleTalk !== undefined &&
+      this.speakerName !== undefined &&
+      Object.keys(speakers).length === Object.keys(this.names).length );
   }
 
   preload() {
@@ -115,11 +129,16 @@ class Speaker extends Layer {
       loader.load(`assets/speakers/${s.image}`, (texture) => {
         this.speakers.set(s.id, {...s, texture});
         this.names[s.id] = s.id;
+        this.checkReady();
       });
     })
   }
 
-  selectSpeaker(id) {
+  selectSpeaker(id, quick) {
+    if (this.selectedSpeaker === id ) {
+      return;
+    }
+    this.selectedSpeaker = id;
     const speaker = this.speakers.get(id);
     const texture = speaker.texture;
     this.plane.material.uniforms.map.value = texture;
@@ -136,6 +155,7 @@ class Speaker extends Layer {
     speaker.talk.forEach( (l, i) => {
       this.talkTitleLines[i].set(l);
       w = Math.max(w, this.talkTitleLines[i].width);
+      this.talkTitleLines[i].mesh.visible = !quick;
     } );
     this.talkplate.scale.x = .25 + .005 * w;
     this.talkplate.scale.y = .5 + .4 * speaker.talk.length;
@@ -143,6 +163,9 @@ class Speaker extends Layer {
     this.plane.material.uniforms.opacity.value = 1;
     this.nameplate.material.opacity = 1;
     this.talkplate.material.opacity = 1;
+    this.talkplate.visible = !quick;
+    this.group.position.y = quick ? 0 : 1;
+    this.speakerName.mesh.position.y = quick ? .25 : .15;
   }
 
   unselectSpeaker() {
@@ -170,7 +193,7 @@ class Speaker extends Layer {
     this.plane.rotation.set(f,f,f);
     const x = .25 * Math.cos(.9*t);
     const y = .25 * Math.sin(1.1*t);
-    this.camera.position.set(x,-1+y,5);
+    this.camera.position.set(x,y,5);
     this.camera.lookAt(this.camera.target);
     this.renderer.render(this.scene, this.camera);
   }
