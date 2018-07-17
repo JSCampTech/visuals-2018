@@ -27,6 +27,7 @@ class Background extends Layer {
       depthWrite: false
     })
     this.flat = new Flat(renderer,this.shader, 1, 1);
+    this.ready = true;
   }
 
   setSize(w, h) {
