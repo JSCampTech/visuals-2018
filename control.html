@@ -40,10 +40,13 @@ body {
   color: black;
 }
 
+ul {
+  list-style-type: none;
+}
+
 #speakers-list {
   display: flex;
   flex-flow: row wrap;
-  list-style-type: none;
 }
 
 #speakers-list li {
@@ -99,6 +102,17 @@ h2 {
   height: 10em;
   padding: 1em;
 }
+
+.loop {
+  margin-bottom: 1em;
+}
+
+.loop label {
+  padding-left: .5em;
+  margin-right: 2em;
+  display: inline-block;
+}
+
   </style>
   </head>
   <body>
@@ -111,13 +125,25 @@ h2 {
 </div>
 
 <div class="unit">
+  <h2>Loop</h2>
+  <div class="loop">
+    <input type="checkbox" value="speakers" id="loop-speakers"/><label for="loop-speakers">Speakers</label>
+    <input type="checkbox" value="sponsors" id="loop-sponsors"/><label for="loop-sponsors">Sponsors</label>
+    <input type="checkbox" value="technologies" id="loop-technologies"/><label for="loop-technologies">Technologies</label>
+  </div>
+  <ul class="loop">
+    <li id="startLoop" class="button">Start</li>
+  </ul>
+</div>
+
+<div class="unit">
   <h2>Speakers</h2>
   <ul id="speakers-list"></ul>
 </div>
 
 <div class="unit">
   <h2>Message</h2>
-  <textarea id="announcement"></textarea>
+  <textarea id="announcement" cols="64"></textarea>
   <input type="button" id="showAnnouncementBtn" class="button" value="To Screen">
 </div>
 
@@ -172,6 +198,15 @@ textarea.addEventListener('keydown', (e) => {
 
 document.getElementById('showAnnouncementBtn').addEventListener('click', e => {
   postAnnouncement();
+});
+
+document.getElementById('startLoop').addEventListener('click', e => {
+  bc.postMessage({
+    action: 'startLoop',
+    speakers: !!document.getElementById('loop-speakers').checked,
+    sponsors: !!document.getElementById('loop-sponsors').checked,
+    technologies: !!document.getElementById('loop-technologies').checked,
+  });
 });
 
 function postAnnouncement() {
