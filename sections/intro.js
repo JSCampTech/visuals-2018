@@ -11,7 +11,7 @@ class Intro extends Layer {
     this.plane = new THREE.Mesh(
       new THREE.PlaneBufferGeometry(1,1),
       new THREE.MeshBasicMaterial({
-        map: loader.load('assets/logo-mask-inverted.png'),
+        map: loader.load('assets/logo-mask-inverted.png', () => { this.ready = true }),
         transparent: true,
         opacity: this.opacity,
         depthWrite: false
