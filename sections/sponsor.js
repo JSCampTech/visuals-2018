@@ -1,15 +1,15 @@
 import THREE from '../third-party/three.js';
 import Layer from '../js/layer.js';
-import sponsors from '../assets/sponsors.js';
 
 class Speaker extends Layer {
 
-  constructor(renderer) {
+  constructor(renderer, sponsors) {
     super(renderer);
     console.log('Speaker ctor');
 
     this.names = {};
 
+    this.sponsorsList = sponsors;
     this.sponsors = new Map();
     this.preload();
 
@@ -32,13 +32,13 @@ class Speaker extends Layer {
   }
 
   checkReady() {
-    this.ready = Object.keys(sponsors).length === Object.keys(this.names).length;
+    this.ready = Object.keys(this.sponsorsList).length === Object.keys(this.names).length;
   }
 
   preload() {
     const loader = new THREE.TextureLoader();
 
-    sponsors.forEach( s => {
+    this.sponsorsList.forEach( s => {
       loader.load(`assets/sponsors/${s.image}`, (texture) => {
         this.sponsors.set(s.id, {...s, texture});
         this.names[s.id] = s.id;

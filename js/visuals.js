@@ -8,6 +8,8 @@ import Sponsor from '../sections/sponsor.js';
 import Technology from '../sections/technology.js';
 import Announcement from '../sections/announcement.js';
 import Maf from '../js/maf.js';
+import sponsorsGold from '../assets/sponsors-gold.js';
+import sponsorsOther from '../assets/sponsors-other.js';
 
 class Visuals {
 
@@ -21,14 +23,16 @@ class Visuals {
     this.logo = new Logo(this.renderer);
     this.intro = new Intro(this.renderer);
     this.speaker = new Speaker(this.renderer);
-    this.sponsor = new Sponsor(this.renderer);
+    this.sponsorsGold = new Sponsor(this.renderer, sponsorsGold);
+    this.sponsorsOther = new Sponsor(this.renderer, sponsorsOther);
     this.technology = new Technology(this.renderer);
     this.background = new Background(this.renderer);
     //this.particles = new Particles(this.renderer);
     this.announcement = new Announcement(this.renderer);
 
     this.loopSpeakers = true;
-    this.loopSponsors = true;
+    this.loopSponsorsGold = true;
+    this.loopSponsorsOther = true;
     this.loopTechnologies = true;
     this.currentPosition = 0;
     this.loopOptions = [];
@@ -46,7 +50,8 @@ class Visuals {
       this.logo.ready,
       this.intro.ready,
       this.speaker.ready,
-      this.sponsor.ready,
+      this.sponsorsGold.ready,
+      this.sponsorsOther.ready,
       this.technology.ready,
       this.background.ready,
       this.announcement.ready
@@ -67,7 +72,8 @@ class Visuals {
     this.intro.setSize(w,h);
     //this.particles.setSize(w,h);
     this.speaker.setSize(w,h);
-    this.sponsor.setSize(w,h);
+    this.sponsorsGold.setSize(w,h);
+    this.sponsorsOther.setSize(w,h);
     this.technology.setSize(w,h);
     this.background.setSize(w,h);
     this.announcement.setSize(w,h);
@@ -88,7 +94,8 @@ class Visuals {
     this.logo.render();
     this.intro.render();
     this.speaker.render();
-    this.sponsor.render();
+    this.sponsorsGold.render();
+    this.sponsorsOther.render();
     this.technology.render();
     this.announcement.render();
     //this.particles.render(delta);
@@ -99,7 +106,8 @@ class Visuals {
 
   setAnnouncement(text) {
     this.loopOptions = [] = '';
-    this.sponsor.opacity = 0;
+    this.sponsorsGold.opacity = 0;
+    this.sponsorsOther.opacity = 0;
     this.technology.opacity = 0;
     this.logo.opacity = 1;
     this.intro.opacity = 0;
@@ -110,7 +118,8 @@ class Visuals {
 
   selectSpeaker(id) {
     this.loopOptions = [] = '';
-    this.sponsor.opacity = 0;
+    this.sponsorsGold.opacity = 0;
+    this.sponsorsOther.opacity = 0;
     this.technology.opacity = 0;
     this.logo.opacity = 1;
     this.intro.opacity = 0;
@@ -121,7 +130,8 @@ class Visuals {
 
   showIntro() {
     this.loopOptions = [] = '';
-    this.sponsor.opacity = 0;
+    this.sponsorsGold.opacity = 0;
+    this.sponsorsOther.opacity = 0;
     this.technology.opacity = 0;
     this.logo.opacity = 0;
     this.announcement.opacity = 0;
@@ -131,7 +141,8 @@ class Visuals {
 
   startLoop() {
     this.intro.opacity = 0;
-    this.sponsor.opacity = 0;
+    this.sponsorsGold.opacity = 0;
+    this.sponsorsOther.opacity = 0;
     this.technology.opacity = 0;
     this.logo.opacity = 1;
     this.announcement.opacity = 0;
@@ -142,9 +153,14 @@ class Visuals {
         this.loopOptions.push( {section: 'speaker', id: n});
       }
     }
-    if (this.loopSponsors) {
-      for (let n of Object.keys(this.sponsor.names)) {
-        this.loopOptions.push( {section: 'sponsor', id: n});
+    if (this.loopSponsorsGold) {
+      for (let n of Object.keys(this.sponsorsGold.names)) {
+        this.loopOptions.push( {section: 'sponsorsGold', id: n});
+      }
+    }
+    if (this.loopSponsorsOther) {
+      for (let n of Object.keys(this.sponsorsOther.names)) {
+        this.loopOptions.push( {section: 'sponsorsOther', id: n});
       }
     }
     if (this.loopTechnologies) {
@@ -165,19 +181,28 @@ class Visuals {
     const o = this.loopOptions[s];
     switch (o.section) {
       case 'speaker':
-      this.sponsor.opacity = 0;
+      this.sponsorsGold.opacity = 0;
+      this.sponsorsOther.opacity = 0;
       this.technology.opacity = 0;
       this.speaker.selectSpeaker(o.id, true);
       this.speaker.opacity = Maf.parabola(t,1);
       break;
-      case 'sponsor':
+      case 'sponsorsGold':
       this.speaker.opacity = 0;
       this.technology.opacity = 0;
-      this.sponsor.selectSponsor(o.id, true);
-      this.sponsor.opacity = Maf.parabola(t,1);
+      this.sponsorsOther.opacity = 0;
+      this.sponsorsGold.selectSponsor(o.id, true);
+      this.sponsorsGold.opacity = Maf.parabola(t,1);
+      break;
+      case 'sponsorsOther':
+      this.speaker.opacity = 0;
+      this.technology.opacity = 0;
+      this.sponsorsGold.opacity = 0;
+      this.sponsorsOther.selectSponsor(o.id, true);
+      this.sponsorsOther.opacity = Maf.parabola(t,1);
       break;
       case 'technology':
-      this.sponsor.opacity = 0;
+      this.sponsorsGold.opacity = 0;
       this.speaker.opacity = 0;
       this.technology.selectTechnology(o.id, true);
       this.technology.opacity = Maf.parabola(t,1);
@@ -205,7 +230,8 @@ bc.onmessage = function (ev) {
     break;
     case 'startLoop':
     visuals.loopSpeakers = ev.data.speakers;
-    visuals.loopSponsors = ev.data.sponsors;
+    visuals.loopSponsorsGold = ev.data.sponsorsGold;
+    visuals.loopSponsorsOther = ev.data.sponsorsOther;
     visuals.loopTechnologies = ev.data.technologies;
     visuals.startLoop();
     break;

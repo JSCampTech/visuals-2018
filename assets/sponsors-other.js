@@ -20,16 +20,6 @@ export default [
     image: 'gf_logo_color_RGB.svg'
   },
   {
-    id: 'ionic',
-    name: 'Ionic Framework',
-    image: 'ionic-logo-landscape.svg'
-  },
-  {
-    id: 'marfeel',
-    name: 'Marfeel',
-    image: 'marfeel.svg'
-  },
-  {
     id: 'modus',
     name: 'Modus',
     image: 'modus.svg'
@@ -38,11 +28,6 @@ export default [
     id: 'netcentric',
     name: 'Netcentric Iberica',
     image: 'netcentric-iberica.svg'
-  },
-  {
-    id: 'newrelic',
-    name: 'NewRelic',
-    image: 'NewRelic.svg'
   },
   {
     id: 'rangleio',
@@ -58,11 +43,5 @@ export default [
     id: 'slack',
     name: 'Slack',
     image: 'Slack_RGB.svg'
-  },
-  {
-    id: 'valorsoft',
-    name: 'Valorsoft',
-    image: 'valorsoft.png'
   }
-
 ]
