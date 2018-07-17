@@ -26,6 +26,7 @@ class Announcement extends Layer {
       this.titleText.set('');
       this.titleText.mesh.position.set(.25,.125,0);
       this.textGroup.add( this.titleText.mesh );
+      this.checkReady();
     } );
     this.montserratBoldAtlas = new FontAtlas( {
       renderer: renderer,
@@ -42,6 +43,7 @@ class Announcement extends Layer {
         this.lines.push(line);
       }
       this.textGroup.add(this.linesGroup);
+      this.checkReady();
     } );
 
     this.camera = new THREE.PerspectiveCamera( 70, 1, .1, 10000 );
@@ -52,15 +54,8 @@ class Announcement extends Layer {
 
   }
 
-  preload() {
-    const loader = new THREE.TextureLoader();
-
-    speakers.forEach( s => {
-      loader.load(`assets/speakers/${s.image}`, (texture) => {
-        this.speakers.set(s.id, {...s, texture});
-        this.names[s.id] = s.id;
-      });
-    })
+  checkReady() {
+    this.ready = ( this.linesGroup !== undefined && this.titleText !== undefined );
   }
 
   set(lines) {
