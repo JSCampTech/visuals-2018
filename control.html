@@ -132,6 +132,7 @@ h2 {
     <input type="checkbox" value="sponsorsGold" id="loop-sponsorsOther"/><label for="loop-sponsorsOther">Rest Sponsors</label>
     <input type="checkbox" value="technologies" id="loop-technologies"/><label for="loop-technologies">Technologies</label>
   </div>
+  <p>Loop time: <input id="timeLoop" value="400"/></p><br/>
   <ul class="loop">
     <li id="startLoop" class="button">Start</li>
   </ul>
@@ -204,6 +205,7 @@ document.getElementById('showAnnouncementBtn').addEventListener('click', e => {
 document.getElementById('startLoop').addEventListener('click', e => {
   bc.postMessage({
     action: 'startLoop',
+    loopTime: document.getElementById('timeLoop').value,
     speakers: !!document.getElementById('loop-speakers').checked,
     sponsorsGold: !!document.getElementById('loop-sponsorsGold').checked,
     sponsorsOther: !!document.getElementById('loop-sponsorsOther').checked,

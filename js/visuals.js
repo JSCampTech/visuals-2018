@@ -36,6 +36,7 @@ class Visuals {
     this.loopTechnologies = true;
     this.currentPosition = 0;
     this.loopOptions = [];
+    this.loopTime = 400;
 
     this.resize();
     window.addEventListener('resize', () => this.resize() );
@@ -174,7 +175,7 @@ class Visuals {
   }
 
   updateLoop() {
-    const time = 400;
+    const time = this.loopTime;
     const t = (this.currentPosition % time ) / time;
     if (this.loopOptions.length === 0 ) return;
     const s = Math.floor(( this.currentPosition / time ) % this.loopOptions.length);
@@ -203,6 +204,7 @@ class Visuals {
       break;
       case 'technology':
       this.sponsorsGold.opacity = 0;
+      this.sponsorsOther.opacity = 0;
       this.speaker.opacity = 0;
       this.technology.selectTechnology(o.id, true);
       this.technology.opacity = Maf.parabola(t,1);
@@ -229,6 +231,7 @@ bc.onmessage = function (ev) {
     visuals.setAnnouncement(ev.data.text);
     break;
     case 'startLoop':
+    visuals.loopTime = parseInt(ev.data.loopTime, 10);
     visuals.loopSpeakers = ev.data.speakers;
     visuals.loopSponsorsGold = ev.data.sponsorsGold;
     visuals.loopSponsorsOther = ev.data.sponsorsOther;
